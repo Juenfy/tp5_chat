@@ -72,7 +72,16 @@ App::run()->send();
 
 3.新建tp5_chat数据库，导入数据库文件，ThinkPHP数据库配置文件默认连接数据库tp5_chat，密码root，如有不同，请自行修改
 
-4.进入项目的extend\GatewayWorker目录下，windows直接双击start_for_win.bat或者运行[^php start.php start]开启服务，linux运行[^php start.php start -d ]以守护进程的方式开启服务，windows不支持守护进程，服务窗口关掉后服务就会关掉。
+4.开启GatewayWorker服务
+
+windows:
+~~~textmate
+直接双击extend/GatewayWorker里的start_for_win.bat
+~~~
+linux:
+~~~shell
+php extend/GatewayWorker/start.php start -d
+~~~
 
 5.配置本地虚拟域名，浏览器输入域名回车，项目即可正常运行。
   
