@@ -15,8 +15,8 @@
 基于ThinkPHP5.0+GateWayWorker+layui开发的简易聊天室
 
 ## 图片预览
-[!私聊](public/preview/preview01.png)
-[!新建群聊](public/preview/preview02.png)
+![私聊](public/preview/preview01.png?raw=true)
+![!新建群聊](public/preview/preview02.png?raw=true)
 ## 项目特性
 
 * 实时
