@@ -17,6 +17,7 @@
 ## 图片预览
 ![私聊](public/preview/preview01.png?raw=true)
 ![!新建群聊](public/preview/preview02.png?raw=true)
+![!邀请好友](public/preview/preview03.png?raw=true)
 ## 项目特性
 
 * 实时
@@ -56,11 +57,24 @@ cd extend
 git clone https://github.com/walkor/GatewayClient.git
 ~~~
 
-2.新建tp5_chat数据库，导入数据库文件，ThinkPHP数据库配置文件默认连接数据库tp5_chat，密码root，如有不同，请自行修改
+2.修改thinkphp里的start.php，默认绑定index模块
+~~~php
+// ThinkPHP 引导文件
+// 1. 加载基础文件
+require __DIR__ . '/base.php';
 
-3.进入项目的extend\GatewayWorker目录下，windows直接双击start_for_win.bat或者运行[^php start.php start]开启服务，linux运行[^php start.php start -d ]以守护进程的方式开启服务，windows不支持守护进程，服务窗口关掉后服务就会关掉。
+//添加这一行代码绑定index模块
+Route::bind('index');
 
-4.配置本地虚拟域名，浏览器输入域名回车，项目即可正常运行。
+// 2. 执行应用
+App::run()->send();
+~~~
+
+3.新建tp5_chat数据库，导入数据库文件，ThinkPHP数据库配置文件默认连接数据库tp5_chat，密码root，如有不同，请自行修改
+
+4.进入项目的extend\GatewayWorker目录下，windows直接双击start_for_win.bat或者运行[^php start.php start]开启服务，linux运行[^php start.php start -d ]以守护进程的方式开启服务，windows不支持守护进程，服务窗口关掉后服务就会关掉。
+
+5.配置本地虚拟域名，浏览器输入域名回车，项目即可正常运行。
   
  ## 持续更新。。。
  后期会持续更新更多功能
