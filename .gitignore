@@ -1,0 +1,7 @@
+/.idea
+/runtime
+/public/uploads
+/vendor
+*.log
+thinkphp
+/extend/GatewayClient

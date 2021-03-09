@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .layui-table, .layui-table-view {
+        margin: 0 !important;
+    }
+
+    .layui-table-tool {
+        display: none;
+    }
+</style>
+<body>
+<div class="demoTable">
+    <div class="layui-inline">
+        <input class="layui-input" name="id" id="demoReload" autocomplete="off" placeholder="输入好友昵称">
+    </div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-normal add-group-btn" lay-event="mutilAdd">确定</button>
+    </div>
+</script>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+<script>
+    layui.use(['table'], function () {
+        let table = layui.table;
+        let cols = [
+            {type: 'checkbox', fixed: 'left'}
+            , {field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true}
+            , {
+                field: 'avatar', title: '头像', width: 100, fixed: 'center', templet: function (res) {
+                    return '<img src="' + res.avatar + '" width="40" height="40"/>'
+                }, width: 80
+            }
+            , {field: 'nickname', title: '昵称'}
+        ];
+        table.render({
+            elem: '#test'
+            , url: '/index/getFriends?id={$id}'
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , cols: [cols]
+            , page: true
+            , id: 'testReload'
+        });
+        //搜索
+        let active = {
+            reload: function () {
+                let demoReload = $('#demoReload');
+                //执行重载
+                table.reload('testReload', {
+                    url: '/index/getFriends?id={$id}'
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        keyword: demoReload.val()
+                    }
+                }, 'data');
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function () {
+            let type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            let checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'mutilAdd':
+                    //批量添加
+                    let data = checkStatus.data;
+                    let type = "{$type}";
+                    if (data.length <= 0) {
+                        layer.msg('至少选一个好友');
+                        return false;
+                    }
+                    ;
+                    let ids = [];
+                    data.map(function (e) {
+                        ids.push(e.id);
+                    });
+                    if (type === 'create') {
+                        //创建群聊
+                        layui.layer.prompt({title: '群名称'}, function (name, index) {
+                            $.post('/index/createGroup', {
+                                ids: ids.join(','),
+                                name: name,
+                                master_id: '{$id}'
+                            }, function (res) {
+                                res = JSON.parse(res);
+                                layui.layer.close(index);
+                                if (res.status) {
+                                    let dataJson = JSON.stringify({
+                                        id: res.result.id,
+                                        type: 'groupchat'
+                                    });
+                                    $(".view").attr('data', dataJson);
+                                    $(".view").attr('data-url', '/index/view');
+                                    $(".view").attr('data-title', '聊天消息（' + res.result.count + '）');
+                                    return layer.msg('创建成功', {icon: 6, time: 1000});
+                                } else {
+                                    return layer.msg(res.result.message, {icon: 5, time: 1000});
+                                }
+                            });
+                        });
+                    } else {
+                        //邀请好友加入群聊
+                        let groupId = '{$groupId}';
+                        $.post('/index/joinGroup', {
+                            ids: ids.join(','),
+                            groupId: groupId,
+                            inviterId: options.from_id
+                        }, function (res) {
+                            res = JSON.parse(res);
+                            if (res.status) {
+                                console.log(res);
+                                let count = res.result.count;
+                                let members = res.result.members;
+                                let tips = res.result.tips;
+                                let join_time = res.result.join_time;
+                                chat.update_group_count(count);
+                                chat.update_chat(groupId, tips, join_time, "#group", count);
+                                let length = 4 - count;
+                                if (length > 0) {
+                                    let html = '';
+                                    for (let i = 0; i < length; i++) {
+                                        if (members.hasOwnProperty(i)) {
+                                            html += '<img alt="avatar" src="' + members[i].avatar + '" />';
+                                        }
+                                    }
+                                    $("#group" + groupId + ">.avatar>.avatar-box").append(html);
+
+                                    layui.layer.msg('邀请成功', {icon: 6, time: 1000});
+                                }
+                                chat.add_tips(tips);
+                            } else {
+                                layui.layer.msg(res.result.message, {icon: 5, time: 1000});
+                            }
+                            return layui.layer.closeAll();
+                        });
+                    }
+                    break;
+            }
+            ;
+        });
+        $(".layui-layer-btn0").click(function () {
+            $(".add-group-btn").click();
+        });
+    });
+</script>
+</body>
+</html>

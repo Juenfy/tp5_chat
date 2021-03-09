@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style type="text/css">
+    html, body {
+        font-family: Microsoft YaHei, Helvitica, Verdana, Tohoma, Arial, san-serif;
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+    }
+
+    ul {
+        list-style: none outside none;
+        margin: 0;
+        padding: 0;
+    }
+
+    body .mainmenu li {
+        float: left;
+        margin-left: 2.4%;
+        margin-top: 2.4%;
+        width: 22%;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    body .mainmenu li a {
+        display: block;
+        color: #FFF;
+        text-align: center
+    }
+
+    body .mainmenu li a b {
+        display: block;
+        height: 80px;
+    }
+
+    body .mainmenu li a img {
+        width: 80px;
+        height: 80px;
+        border-radius: 5px
+    }
+
+    body .mainmenu li a i {
+        font-size: 80px;
+        color: #333;
+        opacity: .5
+    }
+
+    body .mainmenu li a span {
+        display: block;
+        height: 30px;
+        line-height: 30px;
+        background-color: #FFF;
+        color: #999;
+        font-size: 14px;
+    }
+
+    body .mainmenu li:last-child {
+        box-sizing: border-box;
+        border: 1px solid #ccc
+    }
+
+    body .mainmenu li:last-child:hover {
+        background: #ddd
+    }
+
+</style>
+<body class="layui-layout-body">
+<ul class="mainmenu">
+</ul>
+<script>
+    $(function () {
+        let groupId = "{$id}";
+        $.get('/index/getgroupchatview', {groupId: groupId}, function (res) {
+            res = JSON.parse(res);
+            if (res.status) {
+                let data = res.result;
+                let html = '';
+                id = [];
+                data.map(function (item) {
+                    html += '<li><a href="/" ><b><img src="' + item.member.avatar + '" /></b><span>' + item.member.nickname + '</span></a></li>'
+                    id.push(item.member.id);
+                });
+                let dataJson = JSON.stringify({id: id.join(','), type: 'join', groupId: groupId});
+                console.log(dataJson);
+                html += "<li><a href='javascript:;' class='ajaxRequest' data-toggle='ajaxModal' data='" + dataJson + "' data-url='/index/friend' data-title='邀请好友' title='邀请好友'><b><i class='material-icons'>add</i></b></a></li>";
+                $(".mainmenu").append(html);
+            }
+        });
+        $(".mainmenu").on('click', "li>a", function () {
+            let str = $(this).attr('data-toggle') || '';
+            if (str == 'ajaxModal') {
+                let loadIndex = layui.layer.load(0, {shade: false});
+                let url = $(this).attr('data-url');
+                let title = $(this).attr('data-title') ?? false;
+                let data = $(this).attr('data');
+                $.get(url, JSON.parse(data), function (content) {
+                    layui.layer.close(loadIndex);
+                    layui.layer.open({
+                        type: 1
+                        , title: title //不显示标题栏
+                        , closeBtn: false
+                        , area: '400px;'
+                        , shade: 0.8
+                        , id: 'lay_invite_table' //设定一个id，防止重复弹出
+                        , btn: ['确定', '取消']
+                        , content: content
+                    });
+                })
+            }
+        });
+    });
+</script>
+</body>
+</html>

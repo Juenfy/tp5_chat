@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>白嫖王子233-简易聊天室（{$member.nickname}）</title>
+    <link href="__INDEX__/css/icon.css?_t={:time()}" rel="stylesheet">
+    <link href="__PUBLIC__/css/naranja.min.css?_t={:time()}" rel="stylesheet">
+    <link href="__INDEX__/css/chat.css?_t={:time()}" rel="stylesheet">
+    <link href="__PUBLIC__/layui/css/layui.css?_t={:time()}" rel="stylesheet">
+</head>
+<body style="height: 100%;">
+    <section id="container">
+        <aside>
+            <header>
+                <div class="avatar">
+                    <img alt="avatar" src="{$member.avatar }" />
+                    <div class="color"></div>
+                </div>
+                <div>{$member.nickname}</div>
+                <i class="material-icons ajaxRequest" data='{"id":{$member.id},"type":"create"}' data-toggle="ajaxModal" data-url="/index/friend" data-title="新建群聊" title="新建群聊">add</i>
+            </header>
+            <ul id="chat-area">
+                {foreach $myChats as $key=>$myChat}
+                {if isset($myChat.group_id)}
+                <li id="group{$myChat.group_id}" data-id="{$myChat.group_id}" data-type="groupchat" data-nickname="{$myChat.gp.name}" data-count="{$myChat.count}">
+                    <div class="avatar">
+                        <span class="badge hide">0</span>
+                        <div class="avatar-box">
+                            {foreach $myChat.members as $mb}
+                            <img alt="avatar" src="{$mb.member.avatar}" />
+                            {/foreach}
+                        </div>
+                    </div>
+                    <div class="main_li">
+                        <div class="username">{$myChat.gp.name}</div>
+                        <div class="text">{$myChat.content}</div>
+                    </div>
+                    <div class="time">
+                        {$myChat.create_time}
+                    </div>
+                </li>
+                {else}
+                <li id="member{$myChat.id}" data-id="{$myChat.id}" data-type="chat" data-nickname="{$myChat.nickname}">
+                    <div class="avatar">
+                        <span class="badge {if $myChat.is_read}hide{/if}">{$myChat.count}</span>
+                        <img alt="avatar" src="{$myChat.avatar}" />
+                        <div class="color" style="display: none"></div>
+                    </div>
+                    <div class="main_li">
+                        <div class="username">{$myChat.nickname}</div>
+                        <div class="text">{$myChat.content}</div>
+                    </div>
+                    <div class="time">{if $myChat.create_time}{$myChat.create_time}{else}{/if}
+                    </div>
+                </li>
+                {/if}
+                {/foreach}
+            </ul>
+        </aside>
+        <section id="main" style="display: none">
+            <header id="header">
+                <h4 class="to-nickname"></h4>
+                <i class="view material-icons ajaxRequest" data-toggle="ajaxModal">...</i>
+            </header>
+            <section id="messages">
+            </section>
+            <footer>
+                <span class="badge2 hide">0</span>
+                <input type="file" name="file" hidden id="file">
+                <i class="material-icons emotion">mood</i>
+                <textarea placeholder="说点什么吧..." id="saytext"></textarea><i class="material-icons upload-file">photo</i>&nbsp;&nbsp;<i class="material-icons send-message">send</i>
+            </footer>
+        </section>
+    </section>
+    <script src="__PUBLIC__/js/jquery.min.js?_t={:time()}"></script>
+    <script src="__PUBLIC__/layui/layui.all.js?_t={:time()}"></script>
+    <script src="__PUBLIC__/qqFace/js/jquery.qqFace.js?_t={:time()}"></script>
+    <script src="__PUBLIC__/js/naranja.js?_t={:time()}"></script>
+    <script>
+        window.options = JSON.parse('{$options}');
+    </script>
+    <script src="__INDEX__/js/chat-all.js?_t={:time()}"></script>
+</body>
+</html>
