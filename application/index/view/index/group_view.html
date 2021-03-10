@@ -75,7 +75,7 @@
 <script>
     $(function () {
         let groupId = "{$id}";
-        $.get('/index/getgroupchatview', {groupId: groupId}, function (res) {
+        $.get('/user/getListByGroupId', {groupId: groupId}, function (res) {
             res = JSON.parse(res);
             if (res.status) {
                 let data = res.result;
@@ -87,7 +87,7 @@
                 });
                 let dataJson = JSON.stringify({id: id.join(','), type: 'join', groupId: groupId});
                 console.log(dataJson);
-                html += "<li><a href='javascript:;' class='ajaxRequest' data-toggle='ajaxModal' data='" + dataJson + "' data-url='/index/friend' data-title='邀请好友' title='邀请好友'><b><i class='material-icons'>add</i></b></a></li>";
+                html += "<li><a href='javascript:;' class='ajaxRequest' data-toggle='ajaxModal' data='" + dataJson + "' data-url='/user/friend' data-title='邀请好友' title='邀请好友'><b><i class='material-icons'>add</i></b></a></li>";
                 $(".mainmenu").append(html);
             }
         });

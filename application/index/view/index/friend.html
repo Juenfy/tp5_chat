@@ -41,7 +41,7 @@
         ];
         table.render({
             elem: '#test'
-            , url: '/index/getFriends?id={$id}'
+            , url: '/user/getFriends?id={$id}'
             , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             , cols: [cols]
             , page: true
@@ -53,7 +53,7 @@
                 let demoReload = $('#demoReload');
                 //执行重载
                 table.reload('testReload', {
-                    url: '/index/getFriends?id={$id}'
+                    url: '/user/getFriends?id={$id}'
                     , page: {
                         curr: 1 //重新从第 1 页开始
                     }
@@ -87,7 +87,7 @@
                     if (type === 'create') {
                         //创建群聊
                         layui.layer.prompt({title: '群名称'}, function (name, index) {
-                            $.post('/index/createGroup', {
+                            $.post('/group/create', {
                                 ids: ids.join(','),
                                 name: name,
                                 master_id: '{$id}'
@@ -96,11 +96,10 @@
                                 layui.layer.close(index);
                                 if (res.status) {
                                     let dataJson = JSON.stringify({
-                                        id: res.result.id,
-                                        type: 'groupchat'
+                                        id: res.result.id
                                     });
                                     $(".view").attr('data', dataJson);
-                                    $(".view").attr('data-url', '/index/view');
+                                    $(".view").attr('data-url', '/group/view');
                                     $(".view").attr('data-title', '聊天消息（' + res.result.count + '）');
                                     return layer.msg('创建成功', {icon: 6, time: 1000});
                                 } else {
@@ -111,7 +110,7 @@
                     } else {
                         //邀请好友加入群聊
                         let groupId = '{$groupId}';
-                        $.post('/index/joinGroup', {
+                        $.post('/group/join', {
                             ids: ids.join(','),
                             groupId: groupId,
                             inviterId: options.from_id

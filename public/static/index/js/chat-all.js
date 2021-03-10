@@ -65,7 +65,7 @@
                             //聊天窗口接受到信息
                             if (data.toid == o.from_id && data.fromid == o.to_id) {
                                 //更新为已读状态
-                                $.post('/index/read', {fromid: o.from_id, toid: o.to_id}, function (res) {
+                                $.post('/chat/read', {fromid: o.from_id, toid: o.to_id}, function (res) {
                                     console.log(res);
                                 });
                                 html = '<p class="nickname">' + data.from_nickname + '</p><article><div class="avatar"><img alt="avatar" src="' + data.from_avatar + '" /></div><div class="msg"><div class="tri"></div><div class="msg_inner">' + chat.replace_em(data.content) + '</div></article>';
@@ -138,12 +138,14 @@
             $("#chat-area").on("click", "li", function () {
                 let type = $(this).attr("data-type");
                 let id = $(this).attr("data-id");
-                let dataJson = JSON.stringify({id: id, type: type});
+                let dataJson = JSON.stringify({id: id});
                 $(".view").attr('data', dataJson);
-                $(".view").attr('data-url', '/index/view');
                 if (type === 'groupchat') {
                     let count = $(this).attr('data-count');
+                    $(".view").attr('data-url', '/group/view');
                     $(".view").attr('data-title', '聊天消息（' + count + '）');
+                } else {
+                    $(".view").attr('data-url', '/user/view');
                 }
                 chat.open(id, $(this), type);
             });
@@ -235,7 +237,7 @@
             let html = "";
             let className = "";
             let avatar = "";
-            $.post('/index/getlist', {
+            $.post('/chat/getlist', {
                 fromid: o.from_id,
                 toid: o.to_id,
                 is_read: is_read,
@@ -298,7 +300,7 @@
             //消息持久化
             data.chat_type = ct;
             data.group_name = gn;
-            $.post("/index/save", data, function (res) {
+            $.post("/chat/save", data, function (res) {
                 res = JSON.parse(res);
                 console.log(res);
                 if (res.status) {
@@ -375,11 +377,10 @@
             chat.open(id, "#group" + id, 'groupchat');
             chat.add_tips(content);
             let dataJson = JSON.stringify({
-                id: id,
-                type: "groupchat"
+                id: id
             });
             $(".view").attr('data', dataJson);
-            $(".view").attr('data-url', '/index/view');
+            $(".view").attr('data-url', '/group/view');
             $(".view").attr('data-title', '聊天消息（' + count + '）');
         },
         add_tips: (tips) => {
@@ -398,10 +399,10 @@
         },
         update_group_count: (count) => {
             let to_nickname = $("#header>.to-nickname").text();
-            let new_to_nickname = to_nickname.replace(/\（.*?\）/,'（'+count+'）');
+            let new_to_nickname = to_nickname.replace(/\（.*?\）/, '（' + count + '）');
             $("#header>.to-nickname").text(new_to_nickname);
             let title = $(".view").attr("data-title");
-            let new_title = title.replace(/\（.*?\）/,'（'+count+'）');
+            let new_title = title.replace(/\（.*?\）/, '（' + count + '）');
             $(".view").attr("data-title", new_title);
         }
     };

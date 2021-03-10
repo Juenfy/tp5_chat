@@ -133,7 +133,7 @@ class Index extends Controller
      * @return \think\response\Json
      * 获取聊天记录
      */
-    public function getList()
+    /*public function getList()
     {
         $fromid = input('fromid');
         $toid = input('toid');
@@ -166,12 +166,12 @@ class Index extends Controller
             }
             return json($groupChatList);
         }
-    }
+    }*/
 
     /**
      * 消息持久化
      */
-    public function save()
+    /*public function save()
     {
         $data = input();
         $fromid = input('fromid');
@@ -234,7 +234,7 @@ class Index extends Controller
             show_json(0, MSG_ERROR);
         }
 
-    }
+    }*/
 
     /**
      * @return array
@@ -275,7 +275,7 @@ class Index extends Controller
     /**
      * 消息已读状态修改
      */
-    public function read()
+    /*public function read()
     {
         if (request()->isAjax() && request()->isPost()) {
             $fromid = input('fromid');
@@ -288,13 +288,13 @@ class Index extends Controller
                 show_json(0, '操作失败');
             }
         }
-    }
+    }*/
 
     /**
      * @return mixed
      * 返回好友列表视图
      */
-    public function friend()
+    /*public function friend()
     {
         $id = input('id');
         $type = input('type');
@@ -303,12 +303,12 @@ class Index extends Controller
         $this->assign('type', $type);
         $this->assign('groupId', $groupId);
         return $this->fetch();
-    }
+    }*/
 
     /**
      * 获取好友列表
      */
-    public function getFriends()
+    /*public function getFriends()
     {
         if (request()->isAjax()) {
             $id = input('id');
@@ -326,12 +326,12 @@ class Index extends Controller
             $count = $memberModel->whereNotIn('id', $id)->where($where)->count();
             layui_json(0, $friends, $count);
         }
-    }
+    }*/
 
     /**
      * 创建群聊
      */
-    public function createGroup()
+    /*public function createGroup()
     {
         if (request()->isAjax() && request()->isPost()) {
             $data['name'] = input('name');
@@ -483,5 +483,5 @@ class Index extends Controller
         $groupId = input('groupId');
         $group_member_list = (new MemberGroup())->with('member')->where('group_id', $groupId)->order('member_role desc, create_time asc')->limit(20)->select()->toArray();
         show_json(1, $group_member_list);
-    }
+    }*/
 }

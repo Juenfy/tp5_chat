@@ -17,7 +17,7 @@
                     <div class="color"></div>
                 </div>
                 <div>{$member.nickname}</div>
-                <i class="material-icons ajaxRequest" data='{"id":{$member.id},"type":"create"}' data-toggle="ajaxModal" data-url="/index/friend" data-title="新建群聊" title="新建群聊">add</i>
+                <i class="material-icons ajaxRequest" data='{"id":{$member.id},"type":"create"}' data-toggle="ajaxModal" data-url="/user/friend" data-title="新建群聊" title="新建群聊">add</i>
             </header>
             <ul id="chat-area">
                 {foreach $myChats as $key=>$myChat}
