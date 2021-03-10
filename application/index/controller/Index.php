@@ -249,7 +249,7 @@ class Index extends Controller
             $suffix = strtolower(strrchr($file['name'], '.'));
             $filepath = ROOT_PATH . "public" . DS . "uploads" . DS . "chat" . DS;
             if (!file_exists($filepath)) {
-                mkdir($filepath);
+                mkdir($filepath, 755, true);
             }
             $filename = uniqid('chat_img_');
             $accept = ['.jpg', '.jpeg', '.png', '.gif'];
