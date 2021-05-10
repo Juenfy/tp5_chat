@@ -155,7 +155,7 @@
                 if (str == 'ajaxModal') {
                     let loadIndex = l.layer.load(0, {shade: false});
                     let url = $(this).attr('data-url');
-                    let title = $(this).attr('data-title') ?? false;
+                    let title = $(this).attr('data-title') ? $(this).attr('data-title') : false;
                     let data = $(this).attr('data');
                     $.get(url, JSON.parse(data), function (content) {
                         l.layer.close(loadIndex);
