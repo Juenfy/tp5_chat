@@ -70,7 +70,7 @@ class Chat extends Controller
                 'fromid' => $data['fromid'],
                 'toid' => $data['toid'],
                 'content' => $data['content'],
-                'type' => ($data['text_type'] == 1) ? 1 : 2,
+                'type' => $data['type'],
                 'is_read' => $data['is_read']
             ];
             $res = ChatModel::create($saveData, true);
@@ -83,11 +83,11 @@ class Chat extends Controller
                 $fromChatList = Cache::get('member' . $fromid . '_to_member' . $toid . '_chat_list');
                 $toChatList = Cache::get('member' . $toid . '_to_member' . $fromid . '_chat_list');
                 if ($fromChatList) {
-                    array_push($fromChatList, $res);
+                    $fromChatList[] = $res;
                     Cache::set('member' . $fromid . '_to_member' . $toid . '_chat_list', $fromChatList);
                 }
                 if ($toChatList) {
-                    array_push($toChatList, $res);
+                    $toChatList[] = $res;
                     Cache::set('member' . $toid . '_to_member' . $fromid . '_chat_list', $toChatList);
                 }
             }
@@ -109,7 +109,7 @@ class Chat extends Controller
                 unset($res[strtolower('/' . request()->controller() . '/' . request()->action())]);
                 $fromGroupChatList = Cache::get('member_to_group' . $groupid . '_chat_list');
                 if ($fromGroupChatList) {
-                    array_push($fromGroupChatList, $res);
+                    $fromGroupChatList[] = $res;
                     Cache::set('member_to_group' . $groupid . '_chat_list', $fromGroupChatList);
                 }
             }
@@ -117,7 +117,7 @@ class Chat extends Controller
         if ($res) {
             show_json(1, $res);
         } else {
-            show_json(0, MSG_ERROR);
+            show_json(0, '操作失败');
         }
 
     }
