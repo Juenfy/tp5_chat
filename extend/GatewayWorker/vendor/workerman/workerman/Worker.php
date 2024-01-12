@@ -2126,7 +2126,7 @@ class Worker
             return false;
         }
         $stat = \fstat($stream);
-        if (($stat['mode'] & 0170000) === 0100000) {
+        if (isset($stat['mode']) && ($stat['mode'] & 0170000) === 0100000) {
             // file
             static::$_outputDecorated = false;
         } else {

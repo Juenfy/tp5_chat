@@ -49,14 +49,6 @@ cd tp5_chat
 composer install
 ~~~
 
-~~~shell
-cd extend
-~~~
-
-~~~shell
-git clone https://github.com/walkor/GatewayClient.git
-~~~
-
 2.修改thinkphp里的start.php，默认绑定index模块
 ~~~php
 // ThinkPHP 引导文件
@@ -84,6 +76,6 @@ php extend/GatewayWorker/start.php start -d
 ~~~
 
 5.配置本地虚拟域名，浏览器输入域名回车，项目即可正常运行。
-  
+
  ## 持续更新。。。
  后期会持续更新更多功能
