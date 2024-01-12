@@ -48,7 +48,7 @@ class Group extends Controller
             $groupData['content'] = $master['nickname'] . '于 ' . $groupData['createTime'] . ' 创建了' . $groupData['groupName'] . '群聊';
             $mgdata = [];
             //先把群主放进去数组中
-            array_push($mgdata, ['group_id' => $gid, 'member_id' => $data['master_id'], 'member_role' => 2, 'create_time' => time()]);
+            $mgdata[] = ['group_id' => $gid, 'member_id' => $data['master_id'], 'member_role' => 2, 'create_time' => time()];
             //把群主加进群聊中
             $master_client_id = Gateway::getClientIdByUid($data['master_id']);
             Gateway::joinGroup($master_client_id[0], 'group_' . $gid);
@@ -56,7 +56,7 @@ class Group extends Controller
             Gateway::sendToUid($data['master_id'], json_encode($groupData));
             foreach ($ids as $id) {
                 //把选中的好友放进去数组中
-                array_push($mgdata, ['group_id' => $gid, 'member_id' => $id, 'member_role' => 0, 'create_time' => time()]);
+                $mgdata[] = ['group_id' => $gid, 'member_id' => $id, 'member_role' => 0, 'create_time' => time()];
                 //把在线好友加进群聊中
                 if (Gateway::isUidOnline($id)) {
                     $friend_client_id = Gateway::getClientIdByUid($id);
@@ -95,10 +95,10 @@ class Group extends Controller
         $ids = explode(',', $ids);
         $data = [];
         foreach ($ids as $id) {
-            array_push($data, [
+            $data[] = [
                 'group_id' => $groupId,
                 'member_id' => $id
-            ]);
+            ];
         }
         $res = (new MemberGroup())->insertAll($data);
         if ($res) {
